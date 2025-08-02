@@ -1,5 +1,7 @@
+import colorama
 from colorama import Fore, Style
 
+colorama.init()
 from chess_game.constants import BOARD_SIZE, EMPTY_SPOT, EMPTY_RANKS, BOARD_MIN_SIZE
 from chess_game.enums import Color
 from chess_game.pieces import Rook, Knight, Bishop, Queen, King, Pawn, Piece

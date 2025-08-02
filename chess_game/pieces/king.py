@@ -7,7 +7,7 @@ class King(Piece):
         return "♚"
 
     def generate_legal_moves(
-        self, current_row: int, current_col: int, board, *args, **kwargs
+        self, current_row: int, current_col: int, board, directions=None, sliding=False
     ) -> list[tuple[int, int]]:
         return super().generate_legal_moves(
             current_row, current_col, board, directions=KING_DIRECTIONS

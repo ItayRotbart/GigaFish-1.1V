@@ -7,24 +7,8 @@ class Bishop(Piece):
         return "♝"
 
     def generate_legal_moves(
-        self, current_row: int, current_col: int, board, *args, **kwargs
+        self, current_row: int, current_col: int, board, directions=None, sliding=False
     ) -> list[tuple[int, int]]:
-        legal_moves = []
-
-        for direction in BISHOP_DIRECTIONS:
-            for step in range(1, BOARD_SIZE):
-                target_row = current_row + (direction[0] * step)
-                target_col = current_col + (direction[1] * step)
-                square = board.get_piece(target_row, target_col)
-
-                if square is False:
-                    break
-                if square is not None and square.color == self.color:
-                    break
-
-                legal_moves.append((target_row, target_col))
-
-                if square is not None:
-                    break
-
-        return legal_moves
+        return super().generate_legal_moves(
+            current_row, current_col, board, directions=BISHOP_DIRECTIONS, sliding=True
+        )

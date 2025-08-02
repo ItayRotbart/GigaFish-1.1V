@@ -22,7 +22,6 @@ KNIGHT_DIRECTIONS = [
 ]
 KING_DIRECTIONS = [(0, 1), (0, -1), (1, 0), (-1, 0), (-1, 1), (1, 1), (-1, -1), (1, -1)]
 BISHOP_DIRECTIONS = [(1, 1), (1, -1), (-1, 1), (-1, -1)]
-QUEEN_DIRECTIONS = [(0, -1), (0, 1), (-1, 0), (-1, 1), (0, -1)]
 DOUBLE = 2
 EMPTY_SPOT = "."
 LINE = "\n" + "=" * 30
