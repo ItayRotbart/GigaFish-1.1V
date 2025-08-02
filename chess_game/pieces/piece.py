@@ -15,9 +15,9 @@ class Piece:
                 f"{self.__class__.__name__} does not implement generate_legal_moves"
             )
         if not sliding:
-            for direction in directions:
-                target_row = current_row + direction[0]
-                target_col = current_col + direction[1]
+            for dir_row, dir_col in directions:
+                target_row = current_row + dir_row
+                target_col = current_col + dir_col
                 target_square = board.get_piece(target_row, target_col)
                 if target_square is False:
                     continue
