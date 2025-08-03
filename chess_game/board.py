@@ -1,7 +1,6 @@
 import colorama
 from colorama import Fore, Style
 
-colorama.init()
 from chess_game.constants import BOARD_SIZE, EMPTY_SPOT, EMPTY_RANKS, BOARD_MIN_SIZE
 from chess_game.enums import Color
 from chess_game.pieces import Rook, Knight, Bishop, Queen, King, Pawn, Piece
@@ -25,10 +24,10 @@ class Board:
         return True
 
     def move_piece(
-        self, from_row: int, from_col: int, to_row: int, to_col: int
+            self, from_row: int, from_col: int, to_row: int, to_col: int
     ) -> bool:
         if not self._is_valid_position(
-            from_row, from_col
+                from_row, from_col
         ) or not self._is_valid_position(to_row, to_col):
             return False
 
