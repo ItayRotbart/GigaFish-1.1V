@@ -5,7 +5,7 @@ from .constants import BOARD_SIZE, EMPTY_SPOT, EMPTY_RANKS, BOARD_MIN_SIZE
 from .enums import Color
 from .pieces import Rook, Knight, Bishop, Queen, King, Pawn, Piece
 
-BACK_RANK_PIECES = [Rook, Knight, Bishop, King, Queen, Bishop, Knight, Rook]
+BACK_RANK_PIECES = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook]
 
 
 class Board:

@@ -12,7 +12,7 @@ def turn(board: Board, color: Color.WHITE.value | Color.BLACK.value):
                 return None if valid_chords == "cancel" else translate_to_num_units(coord)
             print("Invalid input. Please enter a valid coordinate like e2 or e4.")
 
-    def get_user_move() -> tuple[tuple[int, int], tuple[int, int]]:
+    def get_user_move() -> tuple[tuple[int, int], tuple[int, int]] | None:
         while True:
             piece_start_pos = get_valid_coordinate("Enter the position of the piece you want to move (e.g., e2): ")
 
@@ -31,8 +31,8 @@ def turn(board: Board, color: Color.WHITE.value | Color.BLACK.value):
             else:
                 print("Illegal move. Please try again.")
 
-    def is_valid_cords(coord: str) -> bool:
-        return coord if coord == "cancel" else coord[0] in FILES and coord[1] in RANKS and len(coord) == 2
+    def is_valid_cords(coord: str) -> bool | str:
+        return coord if coord == "cancel" or coord is not None else coord[0] in FILES and coord[1] in RANKS and len(coord) == 2
 
     def translate_to_num_units(coord: str) -> tuple[int, int]:
         file = FILES.index(coord[0])
