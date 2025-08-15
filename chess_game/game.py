@@ -1,6 +1,6 @@
-from chess_game.enums import Color
-from chess_game.constants import FILES, RANKS
-from chess_game.board import Board
+from .enums import Color
+from .constants import FILES, RANKS
+from .board import Board
 
 
 def turn(board: Board, color: Color.WHITE.value | Color.BLACK.value):
@@ -12,11 +12,23 @@ def turn(board: Board, color: Color.WHITE.value | Color.BLACK.value):
             print("Invalid input. Please enter a valid coordinate like e2 or e4.")
 
     def get_user_move() -> tuple[tuple[int, int], tuple[int, int]]:
-        start_pos = get_valid_coordinate("Enter the position of the piece you want to move (e.g., e2): ")
-        handle_invalid_start(start_pos)
-        target_pos = get_valid_coordinate("Enter the position of the square you want to move the piece to (e.g., e4): ")
-        handle_invalid_move(start_pos, target_pos)
-        return start_pos, target_pos
+        while True:
+            piece_start_pos = get_valid_coordinate("Enter the position of the piece you want to move (e.g., e2): ")
+            
+            if not is_valid_start(piece_start_pos):
+                print("Not your piece or no piece there.")
+                continue
+            
+            piece_target_pos = get_valid_coordinate("Enter the position of the square you want to move the piece to (e.g., e4): ")
+            
+            if is_valid_move(piece_start_pos, piece_target_pos):
+                return piece_start_pos, piece_target_pos
+            else:
+                print("Illegal move. Please try again.")
+                # Ask if they want to pick a different piece
+                retry = input("Pick a different piece? (y/n): ").strip().lower()
+                if retry != 'y':
+                    continue
 
     def is_valid_cords(coord: str) -> bool:
         return coord[0] in FILES and coord[1] in RANKS and len(coord) == 2
@@ -28,9 +40,10 @@ def turn(board: Board, color: Color.WHITE.value | Color.BLACK.value):
 
     def is_valid_move(position: tuple[int, int], move: tuple[int, int]) -> bool:
         piece = board.get_piece(position[0], position[1])
-        if move in piece.generate_legal_moves(position[0], position[1], board):
-            return True
-        return False
+        if piece is None:
+            return False
+        legal_moves = piece.generate_legal_moves(position[0], position[1], board)
+        return move in legal_moves
 
     def is_valid_start(position: tuple[int, int]) -> bool:
         square = board.get_piece(position[0], position[1])
@@ -38,26 +51,24 @@ def turn(board: Board, color: Color.WHITE.value | Color.BLACK.value):
             return False
         return True
 
-    def handle_invalid_start(position: tuple[int, int]) -> None:
-        while True:
-            if is_valid_start(position):
-                break
-            print("Not your piece or no piece there.")
-            get_user_move()
-
-    def handle_invalid_move(position: tuple[int, int], move: tuple[int, int]) -> None:
-        while True:
-            if is_valid_move(position, move):
-                break
-            print("Illegal move. Please try again.")
-            get_user_move()
-
     def make_move(start: tuple[int, int], move: tuple[int, int]) -> None:
         piece = board.get_piece(start[0], start[1])
-        board.set_piece(move[0], move[1], piece)
+        if piece is not None:
+            # Remove piece from starting position
+            board.set_piece(start[0], start[1], None)
+            # Place piece at target position
+            board.set_piece(move[0], move[1], piece)
 
     board.print_board()
-    make_move(get_user_move()[0], get_user_move()[1])
+    print(f"\n{'White' if color else 'Black'}'s turn")
+    
+    # Get the move once and store it
+    start_pos, target_pos = get_user_move()
+    make_move(start_pos, target_pos)
+    
+    # Print updated board after move
+    print("\nBoard after move:")
+    board.print_board()
 
 
 def main() -> None:

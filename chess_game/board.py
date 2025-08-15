@@ -1,9 +1,9 @@
 import colorama
 from colorama import Fore, Style
 
-from chess_game.constants import BOARD_SIZE, EMPTY_SPOT, EMPTY_RANKS, BOARD_MIN_SIZE
-from chess_game.enums import Color
-from chess_game.pieces import Rook, Knight, Bishop, Queen, King, Pawn, Piece
+from .constants import BOARD_SIZE, EMPTY_SPOT, EMPTY_RANKS, BOARD_MIN_SIZE
+from .enums import Color
+from .pieces import Rook, Knight, Bishop, Queen, King, Pawn, Piece
 
 BACK_RANK_PIECES = [Rook, Knight, Bishop, King, Queen, Bishop, Knight, Rook]
 
@@ -12,9 +12,9 @@ class Board:
     def __init__(self):
         self.grid: list[list[Piece | None]] = self._init_board()
 
-    def get_piece(self, row: int, col: int) -> Piece | bool:
+    def get_piece(self, row: int, col: int) -> Piece | None:
         if not self._is_valid_position(row, col):
-            return False
+            return None
         return self.grid[row][col]
 
     def set_piece(self, row: int, col: int, piece: Piece | None) -> bool:
