@@ -25,3 +25,5 @@ BISHOP_DIRECTIONS = [(1, 1), (1, -1), (-1, 1), (-1, -1)]
 DOUBLE = 2
 EMPTY_SPOT = "."
 LINE = "\n" + "=" * 30
+FILES = ["a", "b", "c", "d", "e", "f", "g", "h"]
+RANKS = [1, 2, 3, 4, 5, 6, 7, 8]
