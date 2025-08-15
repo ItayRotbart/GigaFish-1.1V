@@ -3,7 +3,7 @@ from chess_game.constants import FILES, RANKS
 from chess_game.board import Board
 
 
-def turn(board: Board, color: Color.value):
+def turn(board: Board, color: Color.WHITE.value | Color.BLACK.value):
     def get_valid_coordinate(prompt: str) -> tuple[int, int]:
         while True:
             coord = input(prompt)
@@ -24,7 +24,7 @@ def turn(board: Board, color: Color.value):
     def translate_to_num_units(coord: str) -> tuple[int, int]:
         file = FILES.index(coord[0])
         rank = RANKS.index(coord[1])
-        return file, rank
+        return rank, file
 
     def is_valid_move(position: tuple[int, int], move: tuple[int, int]) -> bool:
         piece = board.get_piece(position[0], position[1])
@@ -34,7 +34,7 @@ def turn(board: Board, color: Color.value):
 
     def is_valid_start(position: tuple[int, int]) -> bool:
         square = board.get_piece(position[0], position[1])
-        if square is None or square.color == color:
+        if square is None or square.color != color:
             return False
         return True
 
@@ -56,8 +56,8 @@ def turn(board: Board, color: Color.value):
         piece = board.get_piece(start[0], start[1])
         board.set_piece(move[0], move[1], piece)
 
-    make_move(get_user_move()[0], get_user_move()[1])
     board.print_board()
+    make_move(get_user_move()[0], get_user_move()[1])
 
 
 def main() -> None:
