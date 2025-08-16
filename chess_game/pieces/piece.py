@@ -1,12 +1,13 @@
 from chess_game.constants import BOARD_SIZE
+from chess_game.enums import Color
 
 
 class Piece:
-    def __init__(self, color: bool) -> None:
+    def __init__(self, color: Color.WHITE.value | Color.BLACK.value) -> None:
         self.color = color
 
     def generate_legal_moves(
-        self, current_row: int, current_col: int, board, directions=None, sliding=False
+            self, current_row: int, current_col: int, board, directions=None, sliding=False
     ) -> list[tuple[int, int]]:
         legal_moves = []
 
@@ -18,6 +19,9 @@ class Piece:
             for dir_row, dir_col in directions:
                 target_row = current_row + dir_row
                 target_col = current_col + dir_col
+                # Check if coordinates are valid before accessing the board
+                if not board._is_valid_position(target_row, target_col):
+                    continue
                 target_square = board.get_piece(target_row, target_col)
                 if target_square is False:
                     continue
@@ -43,3 +47,41 @@ class Piece:
                     break
 
         return legal_moves
+
+    def generate_attack_squares(
+            self, current_row: int, current_col: int, board, directions=None, sliding=False
+    ) -> list[tuple[int, int]]:
+        """Generate all squares this piece attacks (including through other pieces for sliding pieces)"""
+        attack_squares = []
+
+        if not directions:
+            raise NotImplementedError(
+                f"{self.__class__.__name__} does not implement generate_attack_squares"
+            )
+        
+        if not sliding:
+            # Non-sliding pieces (King, Knight, Pawn)
+            for dir_row, dir_col in directions:
+                target_row = current_row + dir_row
+                target_col = current_col + dir_col
+                if board._is_valid_position(target_row, target_col):
+                    attack_squares.append((target_row, target_col))
+            return attack_squares
+
+        # Sliding pieces (Rook, Bishop, Queen)
+        for row_dir, col_dir in directions:
+            for step in range(1, BOARD_SIZE):
+                target_row = current_row + (row_dir * step)
+                target_col = current_col + (col_dir * step)
+                
+                if not board._is_valid_position(target_row, target_col):
+                    break
+                
+                attack_squares.append((target_row, target_col))
+                
+                # Stop if we hit a piece (but still include that square in attacks)
+                square = board.get_piece(target_row, target_col)
+                if square is not None:
+                    break
+
+        return attack_squares
