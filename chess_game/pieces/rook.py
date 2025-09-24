@@ -1,4 +1,4 @@
-from chess_game.constants import BOARD_SIZE, ROOK_DIRECTIONS
+from ..constants import BOARD_SIZE, ROOK_DIRECTIONS
 from .piece import Piece
 
 

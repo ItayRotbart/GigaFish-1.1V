@@ -1,5 +1,5 @@
-from chess_game.constants import BOARD_SIZE
-from chess_game.enums import Color
+from ..constants import BOARD_SIZE
+from ..enums import Color
 
 
 class Piece:
@@ -7,7 +7,7 @@ class Piece:
         self.color = color
 
     def generate_legal_moves(
-            self, current_row: int, current_col: int, board, directions=None, sliding=False
+        self, current_row: int, current_col: int, board, directions=None, sliding=False
     ) -> list[tuple[int, int]]:
         legal_moves = []
 
@@ -19,10 +19,10 @@ class Piece:
             for dir_row, dir_col in directions:
                 target_row = current_row + dir_row
                 target_col = current_col + dir_col
-                target_square = board.get_piece(target_row, target_col)
-                if target_square is False:
+                square_state = board.get_square(target_row, target_col)
+                if not square_state.in_bounds:
                     continue
-                if target_square and target_square.color == self.color:
+                if square_state.is_occupied and square_state.piece.color == self.color:
                     continue
                 legal_moves.append((target_row, target_col))
             return legal_moves
@@ -31,16 +31,16 @@ class Piece:
             for step in range(1, BOARD_SIZE):
                 target_row = current_row + (row_dir * step)
                 target_col = current_col + (col_dir * step)
-                square = board.get_piece(target_row, target_col)
+                square_state = board.get_square(target_row, target_col)
 
-                if square is False:
+                if not square_state.in_bounds:
                     break
-                if square is not None and square.color == self.color:
+                if square_state.is_occupied and square_state.piece.color == self.color:
                     break
 
                 legal_moves.append((target_row, target_col))
 
-                if square is not None:
+                if square_state.is_occupied:
                     break
 
         return legal_moves

@@ -1,5 +1,5 @@
 from .piece import Piece
-from chess_game.constants import BISHOP_DIRECTIONS, BOARD_SIZE
+from ..constants import BISHOP_DIRECTIONS, BOARD_SIZE
 
 
 class Bishop(Piece):

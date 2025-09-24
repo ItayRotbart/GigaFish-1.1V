@@ -1,4 +1,4 @@
-from chess_game.constants import KNIGHT_DIRECTIONS
+from ..constants import KNIGHT_DIRECTIONS
 from .piece import Piece
 
 

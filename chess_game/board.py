@@ -1,52 +1,70 @@
-import colorama
 from colorama import Fore, Style
+from dataclasses import dataclass
+from typing import Optional
 
-from .constants import BOARD_SIZE, EMPTY_SPOT, EMPTY_RANKS, BOARD_MIN_SIZE
+from .constants import BOARD_SIZE, EMPTY_SPOT, EMPTY_RANKS, BOARD_MIN_SIZE, FILES, RANKS
 from .enums import Color
 from .pieces import Rook, Knight, Bishop, Queen, King, Pawn, Piece
 
 BACK_RANK_PIECES = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook]
 
 
+@dataclass(frozen=True)
+class SquareState:
+    in_bounds: bool
+    piece: Optional[Piece]
+
+    @property
+    def is_empty(self) -> bool:
+        return self.in_bounds and self.piece is None
+
+    @property
+    def is_occupied(self) -> bool:
+        return self.in_bounds and self.piece is not None
+
+
 class Board:
     def __init__(self):
         self.grid: list[list[Piece | None]] = self._init_board()
 
-    def get_piece(self, row: int, col: int) -> Piece | None:
-        if not self._is_valid_position(row, col):
-            return None
-        return self.grid[row][col]
+    def get_square(self, row: int, col: int) -> SquareState:
+        in_bounds = self._is_in_bounds(row, col)
+        if not in_bounds:
+            return SquareState(False, None)
+        return SquareState(True, self.grid[row][col])
 
-    def set_piece(self, row: int, col: int, piece: Piece | None) -> bool:
-        if not self._is_valid_position(row, col):
+    def get_square_val(self, row: int, col: int) -> Piece | bool:
+        square_state = self.get_square(row, col)
+        if not square_state.in_bounds:
             return False
+        return square_state.piece
+
+    def set_square_val(self, row: int, col: int, piece: Piece | None) -> None:
         self.grid[row][col] = piece
-        return True
 
     def move_piece(
-            self, from_row: int, from_col: int, to_row: int, to_col: int
-    ) -> bool:
-        if not self._is_valid_position(
-                from_row, from_col
-        ) or not self._is_valid_position(to_row, to_col):
-            return False
+        self, from_row: int, from_col: int, to_row: int, to_col: int
+    ) -> None:
 
-        piece = self.grid[from_row][from_col]
-        if piece is None:
-            return False
+        piece = self.get_square_val(from_row, from_col)
 
-        if (to_row, to_col) not in piece.generate_legal_moves(from_row, from_col, self):
-            return False
+        self.set_square_val(from_row, from_col, None)
+        self.set_square_val(to_row, to_col, piece)
 
-        self.grid[to_row][to_col] = piece
-        self.grid[from_row][from_col] = None
-        return True
+    def is_legal_move(self, position: tuple[int, int], move: tuple[int, int]) -> bool:
+        source_state = self.get_square(position[0], position[1])
+        if not source_state.in_bounds or source_state.piece is None:
+            return False
+        piece = source_state.piece
+        legal_moves = piece.generate_legal_moves(position[0], position[1], self)
+        return move in legal_moves
 
     @staticmethod
-    def _is_valid_position(row: int, col: int) -> bool:
+    def _is_in_bounds(row: int, col: int) -> bool:
         return BOARD_MIN_SIZE <= row < BOARD_SIZE and BOARD_MIN_SIZE <= col < BOARD_SIZE
 
     def print_board(self) -> None:
+        i = 0
         for row in reversed(self.grid):
             for piece in row:
                 if piece:
@@ -56,7 +74,10 @@ class Board:
                     print(color_code + str(piece) + Style.RESET_ALL, end=" ")
                 else:
                     print(EMPTY_SPOT, end=" ")
-            print()
+            i += 1
+            print(RANKS[len(RANKS) - i])
+        for file in FILES:
+            print(file, end=" ")
 
     def __str__(self) -> str:
         lines = [

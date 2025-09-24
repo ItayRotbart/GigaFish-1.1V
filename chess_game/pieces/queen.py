@@ -1,5 +1,5 @@
 from .piece import Piece
-from chess_game.constants import BISHOP_DIRECTIONS, ROOK_DIRECTIONS
+from ..constants import BISHOP_DIRECTIONS, ROOK_DIRECTIONS
 
 
 class Queen(Piece):

@@ -1,4 +1,4 @@
-from chess_game.constants import KING_DIRECTIONS
+from ..constants import KING_DIRECTIONS
 from .piece import Piece
 
 

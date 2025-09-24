@@ -1,5 +1,5 @@
-from chess_game.board import Board
-from chess_game.constants import LINE
+from .board import Board
+from .constants import LINE
 
 
 def main() -> None:
